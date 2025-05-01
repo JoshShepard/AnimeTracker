@@ -1,0 +1,80 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --background-color: #141414;
+    --logo-font: 'Bangers', 'sans-serif';
+    --logo-color: #EDF6F9;
+    --font-color: #F4F3EE;
+    --main-font: 'Roboto', 'sans-serif';
+    --btn-background-color: #00AFB9;
+    --btn-background-hover-color: #00919A;
+
+}
+
+body {
+    background-color: var(--background-color);
+}
+
+#header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+}
+
+#logo {
+    font-family: var(--logo-font);
+    color: var(--logo-color);
+    font-size: 3.5rem;
+    letter-spacing: 0.05em;
+}
+
+main {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #anime-search-form {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: auto;
+    width: 100%;
+  }
+  
+  input[type="search"] {
+    padding: 1rem;
+    border-radius: 6rem;
+    border: none;
+    font-size: 1.25rem;
+    font-family: var(--main-font);
+    max-width: 40%;
+    width: 100%;
+  }
+  
+  button {
+    display: flex;
+    align-items:center;
+    gap: .5rem;
+    background-color: var(--btn-background-color);
+    padding: .5rem 1.5rem;
+    color: var(--font-color);
+    font-size: 1.2rem;
+    letter-spacing: .05rem;
+    border: none;
+    border-radius: 3rem;
+    cursor: pointer;
+  }
+
+  
+  button:hover {
+    background-color: var(--btn-background-hover-color);
+  }
