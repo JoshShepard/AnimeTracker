@@ -1,6 +1,8 @@
-// Retrieving the form and user search elements
+// Retrieving HTML elements
 const animeForm = document.getElementById('anime-search-form');
 const userAnimeSearch = document.getElementById('anime-search');
+const mainElement = document.getElementById('main-section');
+const headerElement = document.getElementById('header');
 
 // Event listener for submitted form
 animeForm.addEventListener('submit', async event => {
@@ -26,7 +28,10 @@ animeForm.addEventListener('submit', async event => {
         const processedAnimeData = processAnimeData(data.data);
         console.log(processedAnimeData);
 
+        // After user searches move search bar to header
         formUIChange();
+
+
 
     } catch (e) {
         console.log('Error fetching data from Jikan API', e);
@@ -46,11 +51,6 @@ const processAnimeData = animeObjectArray => {
 }
 
 const formUIChange = () => {
-    // Grab main element
-    const mainElement = document.getElementById('main-section');
-    // Grab header element
-    const headerElement = document.getElementById('header');
-
     // Remove animeForm from main section
     mainElement.removeChild(animeForm);
 
@@ -71,4 +71,19 @@ const formUIChange = () => {
     
     // Update search input to look better within header
     userAnimeSearch.style.maxWidth = '100%';
+}
+
+const addAnimeResultCard = processedAnimeData => {
+    // Clear previous main element
+    mainElement.innerHTML = '';
+
+    const cardDiv = document.createElement('div');
+    cardDiv.setAttribute('id', 'anime-card-return-container');
+
+    processedAnimeData.forEach(anime => {
+        const animeCard = createAnimeResultCard(anime);
+        cardDiv.appendChild(animeCard);
+    });
+
+    mainElement.appendChild(cardDiv);
 }
