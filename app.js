@@ -14,8 +14,8 @@ animeForm.addEventListener('submit', async event => {
     // console.log(userAnimeValue);
     if (!userAnimeValue) return;
     
-    // Jikan getAnimeSearch URL
-    const jikanAnimeSearchURL = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(userAnimeValue)}&limit=10`;
+    // Jikan getAnimeSearch URL with 20 responses
+    const jikanAnimeSearchURL = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(userAnimeValue)}&limit=20`;
 
     // API request could return error, put in a try/catch block
     try {
@@ -26,18 +26,19 @@ animeForm.addEventListener('submit', async event => {
 
         // Call anime data processing function to grab wanted data points
         const processedAnimeData = processAnimeData(data.data);
-        console.log(processedAnimeData);
+        // console.log(processedAnimeData);
 
         // After user searches move search bar to header
         formUIChange();
+        
+        // Display search results to screen
         addAnimeResultCard(processedAnimeData);
-
-
     } catch (e) {
         console.log('Error fetching data from Jikan API', e);
     }
 });
 
+// Function to extract useful data as an object for each anime card
 const processAnimeData = animeObjectArray => {
     return animeObjectArray.map(anime => {
         return {
@@ -45,11 +46,14 @@ const processAnimeData = animeObjectArray => {
             mal_id: anime.mal_id,
             imageURL: anime.images.jpg.image_url,
             synopsis: anime.synopsis ? anime.synopsis : 'No synopsis available.',
-            episodes: anime.episodes || 'N/A', 
+            episodes: anime.episodes ? anime.episodes : 'N/A', 
+            airedFrom: anime.aired.prop.from.year,
+            airedTo: anime.aired.prop.to.year, 
         };
     });
 }
 
+// Function to move search bar into header element and empty main section element
 const formUIChange = () => {
     // Remove animeForm from main section
     mainElement.removeChild(animeForm);
@@ -74,24 +78,32 @@ const formUIChange = () => {
     userAnimeSearch.style.maxWidth = '100%';
 }
 
+// Function that adds the completed anime cards to main section element
 const addAnimeResultCard = processedAnimeData => {
     // Clear previous main element
     mainElement.innerHTML = '';
 
+    // Create div to hold anime cards
     const cardContainer = document.createElement('div');
     cardContainer.setAttribute('id', 'anime-card-return-container');
 
+    // Style main element to adjust for header and height for overflow
     mainElement.style.height = 'auto';
     mainElement.style.marginTop = '6rem';
+
+    // Calling helper function to get each anime, create the card, and add it to container
     processedAnimeData.forEach(anime => {
         const animeCard = createAnimeResultCard(anime);
         cardContainer.appendChild(animeCard);
     });
 
+    // Add the card container to main element
     mainElement.appendChild(cardContainer);
 }
 
+// Helper function to place each anime data points within the card
 const createAnimeResultCard = animeObj => {
+    // Create individual card
     const cardDiv = document.createElement('div');
     cardDiv.setAttribute('id', 'anime-card');
 
@@ -101,25 +113,43 @@ const createAnimeResultCard = animeObj => {
     animeImage.setAttribute('alt', animeObj.title);
     animeImage.classList.add('animeImage');
 
+    // Create text div (container for all text information)
+    const animeDetailDiv = document.createElement('div');
+
     // Create anime title element
     const animeTitle = document.createElement('h3');
     animeTitle.textContent = animeObj.title;
     animeTitle.classList.add('animeTitle');
+    animeDetailDiv.appendChild(animeTitle);
 
     // Create anime synopsis
     const animeSynopsis = document.createElement('p');
     animeSynopsis.textContent = animeObj.synopsis
     animeSynopsis.classList.add('animeSynopsis');
+    animeDetailDiv.appendChild(animeSynopsis);
+
+    const animeAirDates = document.createElement('p');
+    animeAirDates.classList.add('animeAirDates');
+    
+    // if there is a aired from and aired to, display both
+    if (animeObj.airedFrom && animeObj.airedTo) {
+        animeAirDates.textContent = `Air Dates: ${animeObj.airedFrom} - ${animeObj.airedTo}`;
+        animeDetailDiv.appendChild(animeAirDates);
+    } else { // Movies only have aired from
+        animeAirDates.textContent = `Air Date: ${animeObj.airedFrom}`
+        animeDetailDiv.appendChild(animeAirDates);
+    }
 
     // Create anime episode number
     const animeEpisodeNumber = document.createElement('p');
-    animeEpisodeNumber.textContent = animeObj.episodes
+    animeEpisodeNumber.textContent = `Total Number of Episodes: ${animeObj.episodes}`;
     animeEpisodeNumber.classList.add('animeEpisodeNum');
+    animeDetailDiv.appendChild(animeEpisodeNumber);
 
+    // Add anime cover image and text information to the card
     cardDiv.appendChild(animeImage);
-    cardDiv.appendChild(animeTitle);
-    cardDiv.appendChild(animeSynopsis);
-    cardDiv.appendChild(animeEpisodeNumber);
+    cardDiv.appendChild(animeDetailDiv);
 
+    // returns the individual anime card that will be added to the card container
     return cardDiv;
 }
