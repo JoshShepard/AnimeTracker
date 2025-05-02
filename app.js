@@ -58,6 +58,7 @@ const processAnimeData = animeObjectArray => {
 
 // Function to move search bar into header element and empty main section element
 const formUIChange = () => {
+    if (!mainElement.contains(animeForm)) return;
     // Remove animeForm from main section
     mainElement.removeChild(animeForm);
 
