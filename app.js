@@ -30,7 +30,7 @@ animeForm.addEventListener('submit', async event => {
 
         // After user searches move search bar to header
         formUIChange();
-
+        addAnimeResultCard(processedAnimeData);
 
 
     } catch (e) {
@@ -77,13 +77,32 @@ const addAnimeResultCard = processedAnimeData => {
     // Clear previous main element
     mainElement.innerHTML = '';
 
-    const cardDiv = document.createElement('div');
-    cardDiv.setAttribute('id', 'anime-card-return-container');
+    const cardContainer = document.createElement('div');
+    cardContainer.setAttribute('id', 'anime-card-return-container');
 
     processedAnimeData.forEach(anime => {
         const animeCard = createAnimeResultCard(anime);
-        cardDiv.appendChild(animeCard);
+        cardContainer.appendChild(animeCard);
     });
 
-    mainElement.appendChild(cardDiv);
+    mainElement.appendChild(cardContainer);
+}
+
+const createAnimeResultCard = animeObj => {
+    const cardDiv = document.createElement('div');
+    cardDiv.setAttribute('id', 'anime-card');
+
+    // Create anime image element
+    const animeImage = document.createElement('img');
+    animeImage.setAttribute('src', animeObj.imageURL);
+    animeImage.setAttribute('alt', animeObj.title);
+
+    // Create anime title element
+    const animeTitle = document.createElement('h3');
+    animeTitle.textContent = animeObj.title;
+
+    cardDiv.appendChild(animeImage);
+    cardDiv.appendChild(animeTitle);
+
+    return cardDiv;
 }
