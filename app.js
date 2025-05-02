@@ -44,7 +44,7 @@ const processAnimeData = animeObjectArray => {
             title: anime.title,
             mal_id: anime.mal_id,
             imageURL: anime.images.jpg.image_url,
-            synopsis: anime.synopsis ? anime.synopsis.slice(0, 100) + '...' : 'No synopsis available.',
+            synopsis: anime.synopsis ? anime.synopsis : 'No synopsis available.',
             episodes: anime.episodes || 'N/A', 
         };
     });
@@ -60,6 +60,7 @@ const formUIChange = () => {
     // Update header styles
     headerElement.style.display = 'flex';
     headerElement.style.justifyContent = 'space-between';
+    headerElement.style.backgroundColor = '#141414';
 
     // Update logo styles
     document.getElementById('logo').style.marginLeft = '1rem';
@@ -80,6 +81,8 @@ const addAnimeResultCard = processedAnimeData => {
     const cardContainer = document.createElement('div');
     cardContainer.setAttribute('id', 'anime-card-return-container');
 
+    mainElement.style.height = 'auto';
+    mainElement.style.marginTop = '6rem';
     processedAnimeData.forEach(anime => {
         const animeCard = createAnimeResultCard(anime);
         cardContainer.appendChild(animeCard);
@@ -96,13 +99,27 @@ const createAnimeResultCard = animeObj => {
     const animeImage = document.createElement('img');
     animeImage.setAttribute('src', animeObj.imageURL);
     animeImage.setAttribute('alt', animeObj.title);
+    animeImage.classList.add('animeImage');
 
     // Create anime title element
     const animeTitle = document.createElement('h3');
     animeTitle.textContent = animeObj.title;
+    animeTitle.classList.add('animeTitle');
+
+    // Create anime synopsis
+    const animeSynopsis = document.createElement('p');
+    animeSynopsis.textContent = animeObj.synopsis
+    animeSynopsis.classList.add('animeSynopsis');
+
+    // Create anime episode number
+    const animeEpisodeNumber = document.createElement('p');
+    animeEpisodeNumber.textContent = animeObj.episodes
+    animeEpisodeNumber.classList.add('animeEpisodeNum');
 
     cardDiv.appendChild(animeImage);
     cardDiv.appendChild(animeTitle);
+    cardDiv.appendChild(animeSynopsis);
+    cardDiv.appendChild(animeEpisodeNumber);
 
     return cardDiv;
 }
