@@ -33,6 +33,9 @@ animeForm.addEventListener('submit', async event => {
         
         // Display search results to screen
         addAnimeResultCard(processedAnimeData);
+
+        // Clear search input
+        userAnimeSearch.value = '';
     } catch (e) {
         console.log('Error fetching data from Jikan API', e);
     }
