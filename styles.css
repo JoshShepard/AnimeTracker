@@ -46,7 +46,6 @@ main {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
-    margin: auto;
     width: 100%;
   }
   

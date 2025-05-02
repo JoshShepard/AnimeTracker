@@ -26,6 +26,8 @@ animeForm.addEventListener('submit', async event => {
         const processedAnimeData = processAnimeData(data.data);
         console.log(processedAnimeData);
 
+        formUIChange();
+
     } catch (e) {
         console.log('Error fetching data from Jikan API', e);
     }
@@ -41,4 +43,32 @@ const processAnimeData = animeObjectArray => {
             episodes: anime.episodes || 'N/A', 
         };
     });
+}
+
+const formUIChange = () => {
+    // Grab main element
+    const mainElement = document.getElementById('main-section');
+    // Grab header element
+    const headerElement = document.getElementById('header');
+
+    // Remove animeForm from main section
+    mainElement.removeChild(animeForm);
+
+    // Appends animeForm to header section
+    headerElement.appendChild(animeForm);
+
+    // Update header styles
+    headerElement.style.display = 'flex';
+    headerElement.style.justifyContent = 'space-between';
+
+    // Update logo styles
+    document.getElementById('logo').style.marginLeft = '1rem';
+
+    // Update form styles
+    animeForm.style.width = '40%';
+    animeForm.style.justifyContent = 'end';
+    animeForm.style.marginRight = '1rem';
+    
+    // Update search input to look better within header
+    userAnimeSearch.style.maxWidth = '100%';
 }
