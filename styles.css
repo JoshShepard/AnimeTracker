@@ -12,6 +12,7 @@
     --main-font: 'Roboto', 'sans-serif';
     --btn-background-color: #00AFB9;
     --btn-background-hover-color: #00919A;
+    --anime-card-bg-color: #1E1E1E;
 
 }
 
@@ -75,4 +76,18 @@ main {
 
   button:hover {
     background-color: var(--btn-background-hover-color);
+  }
+
+  #anime-card-return-container {
+    max-width: 75%;
+    margin: auto;
+  }
+
+  #anime-card {
+    background-color: var(--anime-card-bg-color);
+    margin-bottom: 4rem;
+  }
+
+  .animeTitle, .animeSynopsis, .animeEpisodeNum {
+    color: var(--font-color);
   }
