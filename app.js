@@ -9,20 +9,36 @@ animeForm.addEventListener('submit', async event => {
     
     // User search value and null check
     const userAnimeValue = userAnimeSearch.value.trim();
-    console.log(userAnimeValue);
+    // console.log(userAnimeValue);
     if (!userAnimeValue) return;
     
     // Jikan getAnimeSearch URL
     const jikanAnimeSearchURL = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(userAnimeValue)}&limit=10`;
 
-    // API request could break program, put in a try/catch block
+    // API request could return error, put in a try/catch block
     try {
         const response = await fetch(jikanAnimeSearchURL);
         const data = await response.json();
-
         // Log data to console to check it works
-        console.log(data.data);
+        // console.log(data.data);
+
+        // Call anime data processing function to grab wanted data points
+        const processedAnimeData = processAnimeData(data.data);
+        console.log(processedAnimeData);
+
     } catch (e) {
         console.log('Error fetching data from Jikan API', e);
     }
 });
+
+const processAnimeData = animeObjectArray => {
+    return animeObjectArray.map(anime => {
+        return {
+            title: anime.title,
+            mal_id: anime.mal_id,
+            imageURL: anime.images.jpg.image_url,
+            synopsis: anime.synopsis ? anime.synopsis.slice(0, 100) + '...' : 'No synopsis available.',
+            episodes: anime.episodes || 'N/A', 
+        };
+    });
+}
