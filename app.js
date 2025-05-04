@@ -20,7 +20,17 @@ animeForm.addEventListener('submit', async event => {
     // API request could return error, put in a try/catch block
     try {
         const response = await fetch(jikanAnimeSearchURL);
+        // Error Handling - fetching api url error
+        if (!response.ok) throw new Error('Network response was not ok');
+
         const data = await response.json();
+        // Error Handling - data returned is not there or length of 0
+        if (!data.data || data.data.length === 0) {
+            formUIChange();
+            userAnimeSearch.value = '';
+            showError('No results found. Please try another anime!');
+            return;
+        }
         // Log data to console to check it works
         // console.log(data.data);
 
@@ -38,8 +48,29 @@ animeForm.addEventListener('submit', async event => {
         userAnimeSearch.value = '';
     } catch (e) {
         console.log('Error fetching data from Jikan API', e);
+        showError('Something went wrong. Please try again later!');
     }
 });
+
+// Error Handling Function
+const showError = message => {
+    // Clear main element to show error message only
+    mainElement.innerHTML = '';
+
+    // Create error message div
+    const errorContainer = document.createElement('div');
+    errorContainer.textContent = message;
+
+    // Error container styling - Move to external CSS file after project
+    errorContainer.style.color = 'red';
+    errorContainer.style.fontSize = '1.5rem';
+    errorContainer.style.marginTop = '6rem';
+    errorContainer.style.textAlign = 'center';
+    errorContainer.style.fontFamily = 'var(--main-font)';
+    
+    // Add error to main element for display
+    mainElement.appendChild(errorContainer);
+}
 
 // Function to extract useful data as an object for each anime card
 const processAnimeData = animeObjectArray => {
