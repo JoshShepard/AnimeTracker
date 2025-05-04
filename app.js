@@ -181,10 +181,47 @@ const createAnimeResultCard = animeObj => {
     animeEpisodeNumber.classList.add('animeEpisodeNum');
     animeDetailDiv.appendChild(animeEpisodeNumber);
 
+    // Create and add 'Add to Watch List' button
+    const watchListBtn = document.createElement('button');
+    watchListBtn.textContent = 'Add to Watch List ';
+
+    const watchListBtnIcon = document.createElement('i');
+    watchListBtnIcon.classList.add('fa-solid', 'fa-plus');
+    watchListBtn.appendChild(watchListBtnIcon);
+    watchListBtn.setAttribute('aria-label', 'Add to Watch List');
+    animeDetailDiv.appendChild(watchListBtn);
+
+    // Add to watch list event listener
+    watchListBtn.addEventListener('click', () => {
+        addToWatchList(animeObj);
+    })
+
     // Add anime cover image and text information to the card
     cardDiv.appendChild(animeImage);
     cardDiv.appendChild(animeDetailDiv);
 
     // returns the individual anime card that will be added to the card container
     return cardDiv;
+}
+
+const addToWatchList = animeObj => {
+    // Wrap in a try/catch in case localstorage is full or unavailable also because this is a feature that could break and send an error 
+    try {
+        // Grabs users watch list in local storage, creates new array if there is none in local storage
+        const watchListArray = JSON.parse(localStorage.getItem('watchList')) || [];
+    
+        // Check if anime is already in users watch list
+        if (watchListArray.some(anime => anime.mal_id === animeObj.mal_id)) {
+            console.log('Anime is already in the watch list!');
+            return;
+        }
+    
+        // Anime is NOT in watch list
+        // Add anime to watchListArray
+        watchListArray.push(animeObj);
+        localStorage.setItem('watchList', JSON.stringify(watchListArray));
+        console.log(`You have successfully added ${animeObj.title} to watch list in local storage`);
+    } catch (error) {
+        console.error(`Error adding ${animeObj.title} to the watch list`, error);
+    }
 }
