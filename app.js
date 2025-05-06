@@ -181,14 +181,25 @@ const createAnimeResultCard = animeObj => {
     animeEpisodeNumber.classList.add('animeEpisodeNum');
     animeDetailDiv.appendChild(animeEpisodeNumber);
 
-    // Create and add 'Add to Watch List' button
+    // Create and add 'Add to Watch List' button (keeps state of button(add/remove) on refresh)
     const watchListBtn = document.createElement('button');
-    watchListBtn.textContent = 'Add to Watch List ';
-
     const watchListBtnIcon = document.createElement('i');
-    watchListBtnIcon.classList.add('fa-solid', 'fa-plus');
-    watchListBtn.appendChild(watchListBtnIcon);
-    watchListBtn.setAttribute('aria-label', 'Add to Watch List');
+    const watchListArray = JSON.parse(localStorage.getItem('watchList')) || [];
+    const isInWatchList = watchListArray.some(anime => anime.mal_id === animeObj.mal_id);
+
+    if (isInWatchList) {
+        watchListBtn.classList.add('remove-watch-list');
+        watchListBtnIcon.classList.add('fa-solid', 'fa-minus');
+        watchListBtn.appendChild(watchListBtnIcon);
+        watchListBtn.appendChild(document.createTextNode(' Remove from Watch List'));
+        watchListBtn.setAttribute('aria-label', 'Remove from Watch List');
+    } else {
+        watchListBtn.classList.add('add-watch-list');
+        watchListBtnIcon.classList.add('fa-solid', 'fa-plus');
+        watchListBtn.appendChild(watchListBtnIcon);
+        watchListBtn.appendChild(document.createTextNode(' Add to Watch List'));
+        watchListBtn.setAttribute('aria-label', 'Add to Watch List');
+    }
     animeDetailDiv.appendChild(watchListBtn);
 
     // Add to watch list event listener
@@ -206,9 +217,11 @@ const createAnimeResultCard = animeObj => {
 
 const toggleWatchList = (animeObj, button) => {
     // Wrap in a try/catch in case localstorage is full or unavailable
-    try {   
+    try {  
+        // Grab watch list from localStorage or create a new one 
         let watchListArray = JSON.parse(localStorage.getItem('watchList')) || [];
 
+        // Find anime object index in watch list array
         const animeIndex = watchListArray.findIndex(anime => anime.mal_id === animeObj.mal_id);
 
         // We found the anime in the array
@@ -217,10 +230,13 @@ const toggleWatchList = (animeObj, button) => {
             localStorage.setItem('watchList', JSON.stringify(watchListArray));
 
             // Update button to add
-            button.textContent = 'Add to Watch List';
+            button.textContent = '';
+            button.classList.remove('remove-watch-list');
+            button.classList.add('add-watch-list');
             const icon = document.createElement('i');
             icon.classList.add('fa-solid', 'fa-plus');
             button.appendChild(icon);
+            button.appendChild(document.createTextNode(' Add to Watch List'));
 
             console.log(`${animeObj.title} removed from watch list!`);
         } else {
@@ -228,10 +244,13 @@ const toggleWatchList = (animeObj, button) => {
             watchListArray.push(animeObj);
             localStorage.setItem('watchList', JSON.stringify(watchListArray));
 
-            button.textContent = 'Remove from Watch List ';
+            button.textContent = '';
+            button.classList.remove('add-watch-list')
+            button.classList.add('remove-watch-list');
             const icon = document.createElement('i');
             icon.classList.add('fa-solid', 'fa-minus');
             button.appendChild(icon);
+            button.appendChild(document.createTextNode(' Remove from Watch List'));
 
             console.log(`${animeObj.title} added to watch list`);
         }
