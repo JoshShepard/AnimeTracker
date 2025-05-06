@@ -13,6 +13,8 @@
     --btn-background-color: #00AFB9;
     --btn-background-hover-color: #00919A;
     --anime-card-bg-color: #1E1E1E;
+    --remove-btn-bg-color: #E53935;
+    --remove-btn-bg-hover-color: #C62828;
 }
 
 body {
@@ -102,3 +104,16 @@ main {
     font-family: var(--main-font);
     margin: .5rem;
   }
+
+.add-watch-list {
+  margin: 1rem .5rem;
+}
+
+.remove-watch-list {
+  background-color: var(--remove-btn-bg-color);
+  margin: 1rem .5rem;
+}
+
+.remove-watch-list:hover {
+  background-color: var(--remove-btn-bg-hover-color);
+}
