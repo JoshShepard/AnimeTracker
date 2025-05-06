@@ -193,7 +193,7 @@ const createAnimeResultCard = animeObj => {
 
     // Add to watch list event listener
     watchListBtn.addEventListener('click', () => {
-        addToWatchList(animeObj);
+        toggleWatchList(animeObj, watchListBtn);
     })
 
     // Add anime cover image and text information to the card
@@ -204,24 +204,38 @@ const createAnimeResultCard = animeObj => {
     return cardDiv;
 }
 
-const addToWatchList = animeObj => {
-    // Wrap in a try/catch in case localstorage is full or unavailable also because this is a feature that could break and send an error 
-    try {
-        // Grabs users watch list in local storage, creates new array if there is none in local storage
-        const watchListArray = JSON.parse(localStorage.getItem('watchList')) || [];
-    
-        // Check if anime is already in users watch list
-        if (watchListArray.some(anime => anime.mal_id === animeObj.mal_id)) {
-            console.log('Anime is already in the watch list!');
-            return;
+const toggleWatchList = (animeObj, button) => {
+    // Wrap in a try/catch in case localstorage is full or unavailable
+    try {   
+        let watchListArray = JSON.parse(localStorage.getItem('watchList')) || [];
+
+        const animeIndex = watchListArray.findIndex(anime => anime.mal_id === animeObj.mal_id);
+
+        // We found the anime in the array
+        if (animeIndex > -1) {
+            watchListArray.splice(animeIndex, 1);
+            localStorage.setItem('watchList', JSON.stringify(watchListArray));
+
+            // Update button to add
+            button.textContent = 'Add to Watch List';
+            const icon = document.createElement('i');
+            icon.classList.add('fa-solid', 'fa-plus');
+            button.appendChild(icon);
+
+            console.log(`${animeObj.title} removed from watch list!`);
+        } else {
+            // Add anime ot list
+            watchListArray.push(animeObj);
+            localStorage.setItem('watchList', JSON.stringify(watchListArray));
+
+            button.textContent = 'Remove from Watch List ';
+            const icon = document.createElement('i');
+            icon.classList.add('fa-solid', 'fa-minus');
+            button.appendChild(icon);
+
+            console.log(`${animeObj.title} added to watch list`);
         }
-    
-        // Anime is NOT in watch list
-        // Add anime to watchListArray
-        watchListArray.push(animeObj);
-        localStorage.setItem('watchList', JSON.stringify(watchListArray));
-        console.log(`You have successfully added ${animeObj.title} to watch list in local storage`);
     } catch (error) {
-        console.error(`Error adding ${animeObj.title} to the watch list`, error);
+        console.error('Error toggling watch list:', error);
     }
-}
+};
