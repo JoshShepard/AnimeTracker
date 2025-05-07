@@ -273,8 +273,17 @@ const createWatchListSection = () => {
             // Exit if section already exists
             if (existingSection) return; 
 
+            // Create Watch List Title
+            const watchListTitle = document.createElement('h3');
+            watchListTitle.classList.add('watchListTitle');
+            watchListTitle.textContent = 'Anime Watch List';
+
+            // Create Watch List Section to hold watch list anime cards
             const watchListSection = document.createElement('section');
             watchListSection.classList.add('watch-list-section');
+
+            // Add Title to the watch list section
+            watchListSection.appendChild(watchListTitle);
 
             // loop through the watch list
             localWatchList.forEach(anime => {
@@ -287,6 +296,9 @@ const createWatchListSection = () => {
     
             // Add watchListSection to main element
             mainElement.appendChild(watchListSection);
+
+            mainElement.style.display = 'block';
+            mainElement.style.paddingTop = '6rem';
         } else {
             console.log('Your watchlist is empty!');
         }
