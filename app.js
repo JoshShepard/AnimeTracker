@@ -258,3 +258,44 @@ const toggleWatchList = (animeObj, button) => {
         console.error('Error toggling watch list:', error);
     }
 };
+
+const createWatchListSection = () => {
+    try {
+        // Grab localStorage array
+        const localWatchList = JSON.parse(localStorage.getItem('watchList')) || [];
+    
+        if (localWatchList.length > 0) {
+            // Move search bar to header
+            formUIChange();
+
+            // Check if the section already exists to avoid adding it again
+            let existingSection = document.querySelector('.watch-list-section');
+            // Exit if section already exists
+            if (existingSection) return; 
+
+            const watchListSection = document.createElement('section');
+            watchListSection.classList.add('watch-list-section');
+
+            // loop through the watch list
+            localWatchList.forEach(anime => {
+                // Each anime will call the animeResultCard function
+                const animeCard = createAnimeResultCard(anime); 
+
+                // Add anime card to the watch list section
+                watchListSection.appendChild(animeCard);
+            });
+    
+            // Add watchListSection to main element
+            mainElement.appendChild(watchListSection);
+        } else {
+            console.log('Your watchlist is empty!');
+        }
+    } catch (error) {
+        console.error('Error trying to grab local storage ', error);
+    }
+};
+
+// Onces page loads, call createWatchListSection function to load users localStorage and display list if available
+document.addEventListener('DOMContentLoaded', () => {
+    createWatchListSection();
+});
